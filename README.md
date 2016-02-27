@@ -2,17 +2,10 @@ ec2-ls-hosts: an alternative tool for list ec2 instances
 ====
 
 `ls-hosts` is a simple cli-tool for describing ec2 instances.
-This tool will simplify the describing instances.
+This tool will simplify the operation to describe instances.
 You can integrate this tool with unix tools (eg: awk, ssh, peco, and so on.)
 
-dependencies
-----
-
-- [aws-sdk-go](https://github.com/aws/aws-sdk-go)
-- [go-ini](https://github.com/go-ini/ini)
-- [olekukonko/tablewriter](https://github.com/olekukonko/tablewriter)
-
-usage
+Usage
 ----
 
 ```bash
@@ -22,7 +15,7 @@ i-00000002 10.0.0.2 app02 running
 i-00000003 10.0.0.3 app03 running
 ```
 
-options
+CLI Options
 ----
 
 ### with options
@@ -34,7 +27,6 @@ tag filter
 ```
 -filters=key1:value1,key2:value2...
 ```
-
 
 `-columns`
 
@@ -51,7 +43,8 @@ support columns
 
 ### with config file
 
-/etc/ls-hosts.conf or ~/.ls-hosts
+1. ~/.ls-hosts
+1. /etc/ls-hosts.conf
 
 ```
 [options]
@@ -60,13 +53,6 @@ region  = ap-northeast-1
 filters = instance-state-name:running
 tags    = Role:app,Env:production
 fields = instance-id,tag:Name,public-ip,private-ip
-```
-
-build
-----
-
-```bash
-$ make build (-B)
 ```
 
 Integration with zsh and peco
@@ -93,3 +79,31 @@ function peco-ec2-ls-hosts () {
 zle -N peco-ec2-ls-hosts
 bindkey '^oo' peco-ec2-ls-hosts
 ```
+
+Build
+----
+
+```bash
+$ make build (-B)
+```
+
+Dependencies
+
+- [aws-sdk-go](https://github.com/aws/aws-sdk-go)
+- [go-ini](https://github.com/go-ini/ini)
+- [olekukonko/tablewriter](https://github.com/olekukonko/tablewriter)
+
+Contribution
+----
+
+- Fork (https://github.com/ReSTARTR/ec2-ls-hosts/fork)
+- Create a feature branch
+- Commit your changes
+- Rebase your local changes against the master branch
+- Run test suite with the make test command and confirm that it passes
+- Create a new Pull Request
+
+Author
+----
+
+[ReSTARTR](https://github.com/ReSTARTR)
