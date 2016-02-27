@@ -37,8 +37,7 @@ build
 ----
 
 ```bash
-$ go get github.com/aws/aws-sdk-go/aws
-$ go build -o ls-hosts ./main.go
+$ make build (-B)
 ```
 
 with zsh and peco

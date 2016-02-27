@@ -9,10 +9,11 @@ import (
 	"strings"
 )
 
-const (
-	VERSION = "0.0.1"
+var (
+	version string
 )
 
+//
 // parse filters option string
 //  `-filters` pattern : key1:value1,key2:value2,...
 func parseFilterString(s string) map[string]string {
@@ -43,7 +44,7 @@ func main() {
 	v := flag.Bool("v", false, "show version")
 	flag.Parse()
 	if *v {
-		fmt.Println("version: " + VERSION)
+		fmt.Println("version: " + version)
 		os.Exit(0)
 	}
 
