@@ -122,7 +122,8 @@ func formatInstance(inst *ec2.Instance, fields []string) []string {
 			matched, err := regexp.Match("tag:.+", []byte(c))
 			if err == nil && matched {
 				kv := strings.Split(c, ":")
-				if v, ok := tags[kv[1]]; ok {
+				key := strings.Join(kv[1:len(kv)], ":")
+				if v, ok := tags[key]; ok {
 					values = append(values, v)
 				}
 			}

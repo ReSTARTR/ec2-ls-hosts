@@ -40,7 +40,8 @@ func parseFilterString(s string) map[string]string {
 	for _, kv := range strings.Split(s, ",") {
 		a := strings.Split(kv, ":")
 		if len(a) > 1 {
-			filters[a[0]] = a[1]
+			v := a[1:len(a)]
+			filters[a[0]] = strings.Join(v, ":")
 		}
 	}
 	return filters
