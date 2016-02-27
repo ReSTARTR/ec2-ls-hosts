@@ -22,7 +22,7 @@ var (
 		"instance-id",
 		"private-ip",
 		"public-ip",
-		"instance-state-name",
+		"instance-state",
 	}
 )
 
@@ -117,6 +117,10 @@ func formatInstance(inst *ec2.Instance, fields []string) []string {
 			values = append(values, strings.Join(privateIps, ","))
 		case "public-ip":
 			values = append(values, strings.Join(publicIps, ","))
+		case "launch-time":
+			values = append(values, inst.LaunchTime.String())
+		case "instance-state":
+			values = append(values, *inst.State.Name)
 		default:
 			// extract key-values as tag string
 			matched, err := regexp.Match("tag:.+", []byte(c))
