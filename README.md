@@ -1,5 +1,9 @@
-ec2-ls-hosts - list aws instances
+ec2-ls-hosts: an alternative tool for list ec2 instances
 ====
+
+`ls-hosts` is a simple cli-tool for describing ec2 instances.
+This tool will simplify the describing instances.
+You can integrate this tool with unix tools (eg: awk, ssh, peco, and so on.)
 
 dependencies
 ----
@@ -65,10 +69,10 @@ build
 $ make build (-B)
 ```
 
-with zsh and peco
+Integration with zsh and peco
 ----
 
-- SSH login with interactive host selector
+- With this integration, you can ssh login with interactive host selector
 
 Dependencies
 
