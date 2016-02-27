@@ -1,4 +1,4 @@
-aws-ls-hosts - list aws instances
+ec2-ls-hosts - list aws instances
 ====
 
 dependencies
