@@ -58,6 +58,8 @@ fields = instance-id,tag:Name,public-ip,private-ip
 Integration with zsh and peco
 ----
 
+[![https://gyazo.com/ae45206ad8215934f5e0a897b91b3d2a](https://i.gyazo.com/ae45206ad8215934f5e0a897b91b3d2a.gif)](https://gyazo.com/ae45206ad8215934f5e0a897b91b3d2a)
+
 - With this integration, you can ssh login with interactive host selector
 
 Dependencies
@@ -68,9 +70,9 @@ Dependencies
 ```~/.zshrc
 function peco-ec2-ls-hosts () {
   BUFFER=$(
-    /path/to/ls-hosts -fields tag:Name,private-ip | \
+    /path/to/ls-hosts -fields instance-id,tag:Role,tag:Name | \
     peco --prompt "EC2 >" --query "$LBUFFER" | \
-    awk '{printf ssh %s\n", $2}'
+    awk '{printf "echo \"Login:%s"; ssh %s\n", $3,$2}'
   )
   CURSOR=$#BUFFER
   zle accept-line
