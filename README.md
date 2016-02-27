@@ -6,6 +6,7 @@ dependencies
 
 - [aws-sdk-go](https://github.com/aws/aws-sdk-go)
 - [go-ini](https://github.com/go-ini/ini)
+- [olekukonko/tablewriter](https://github.com/olekukonko/tablewriter)
 
 usage
 ----

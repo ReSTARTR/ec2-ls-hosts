@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"github.com/ReSTARTR/ec2-ls-hosts/client"
 	"github.com/ReSTARTR/ec2-ls-hosts/creds"
-	"github.com/go-ini/ini"
+	"github.com/olekukonko/tablewriter"
+	"gopkg.in/ini.v1"
 	"os"
 	"strings"
 )
@@ -65,6 +66,16 @@ func optionsFromFile() *client.Options {
 	return opt
 }
 
+func NewTableWriter() client.Writer {
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetBorder(false)
+	table.SetHeaderLine(false)
+	//table.SetAutoFormatHeaders(false)
+	table.SetColumnSeparator("")
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	return table
+}
+
 func main() {
 	// parse options
 	filters := flag.String("filters", "", "key1:value1,key2:value2,...")
@@ -72,6 +83,7 @@ func main() {
 	fields := flag.String("fields", "", "column1,column2,...")
 	regionString := flag.String("region", "", "region name")
 	credsString := flag.String("creds", "", "env, shared, iam")
+	//hideHeader := flag.Bool("N", false, "hide header")
 	v := flag.Bool("v", false, "show version")
 	flag.Parse()
 	if *v {
@@ -103,7 +115,8 @@ func main() {
 	}
 
 	// run
-	err := client.Describe(opt)
+	w := NewTableWriter()
+	err := client.Describe(opt, w)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 	}

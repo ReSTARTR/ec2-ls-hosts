@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/go-ini/ini"
+	"gopkg.in/ini.v1"
 	"os"
 )
 

@@ -2,7 +2,6 @@ package client
 
 import (
 	"errors"
-	"fmt"
 	"github.com/ReSTARTR/ec2-ls-hosts/creds"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -10,6 +9,12 @@ import (
 	"regexp"
 	"strings"
 )
+
+type Writer interface {
+	SetHeader(s []string)
+	Append(s []string)
+	Render()
+}
 
 var (
 	defaultFields = []string{
@@ -36,7 +41,7 @@ func (o *Options) FieldNames() []string {
 	return defaultFields
 }
 
-func Describe(o *Options) error {
+func Describe(o *Options, w Writer) error {
 	// build queries
 	config := &aws.Config{Region: aws.String(o.Region)}
 	credentials, err := creds.SelectCredentials(o.Credentials)
@@ -70,15 +75,19 @@ func Describe(o *Options) error {
 		return errors.New("Not Found")
 	}
 
+	w.SetHeader(o.FieldNames())
 	for idx, _ := range resp.Reservations {
 		for _, inst := range resp.Reservations[idx].Instances {
-			fmt.Println(formatInstance(inst, o.FieldNames()))
+			values := formatInstance(inst, o.FieldNames())
+			w.Append(values)
 		}
 	}
+	w.Render()
+
 	return nil
 }
 
-func formatInstance(inst *ec2.Instance, fields []string) string {
+func formatInstance(inst *ec2.Instance, fields []string) []string {
 	// fetch IPs
 	var privateIps []string
 	var publicIps []string
@@ -120,5 +129,5 @@ func formatInstance(inst *ec2.Instance, fields []string) string {
 		}
 	}
 
-	return strings.Join(values, "\t")
+	return values
 }

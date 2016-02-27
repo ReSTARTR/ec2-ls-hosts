@@ -18,6 +18,7 @@ help:
 get-deps:
 	@go get -v gopkg.in/ini.v1
 	@go get -v github.com/aws/aws-sdk-go
+	@go get -v github.com/olekukonko/tablewriter
 
 clean:
 	@rm -rf ./build/*
