@@ -68,6 +68,8 @@ $ make build (-B)
 with zsh and peco
 ----
 
+- SSH login with interactive host selector
+
 Dependencies
 
 - zsh
@@ -76,7 +78,7 @@ Dependencies
 ```~/.zshrc
 function peco-ec2-ls-hosts () {
   BUFFER=$(
-    /path/to/ls-hosts -columns=tag:Role,public-ip | \
+    /path/to/ls-hosts -fields tag:Name,private-ip | \
     peco --prompt "EC2 >" --query "$LBUFFER" | \
     awk '{printf ssh %s\n", $2}'
   )
