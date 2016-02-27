@@ -16,6 +16,7 @@ help:
 	@echo " get-deps"
 
 get-deps:
+	@go get -v gopkg.in/ini.v1
 	@go get -v github.com/aws/aws-sdk-go
 
 clean:

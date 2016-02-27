@@ -1,6 +1,7 @@
 package client
 
 import (
+	"errors"
 	"fmt"
 	"github.com/ReSTARTR/ec2-ls-hosts/creds"
 	"github.com/aws/aws-sdk-go/aws"
@@ -10,15 +11,50 @@ import (
 	"strings"
 )
 
-func Describe(filters map[string]string, columns []string) error {
+var (
+	defaultFields = []string{
+		"tag:Name",
+		"instance-id",
+		"private-ip",
+		"public-ip",
+		"instance-state-name",
+	}
+)
+
+type Options struct {
+	Filters     map[string]string
+	TagFilters  map[string]string
+	Fields      []string
+	Region      string
+	Credentials string
+}
+
+func (o *Options) FieldNames() []string {
+	if len(o.Fields) > 1 {
+		return o.Fields
+	}
+	return defaultFields
+}
+
+func Describe(o *Options) error {
 	// build queries
-	config := &aws.Config{Region: aws.String("ap-northeast-1")}
-	config.Credentials = creds.SelectCredentials("") // TODO
+	config := &aws.Config{Region: aws.String(o.Region)}
+	credentials, err := creds.SelectCredentials(o.Credentials)
+	if err != nil {
+		return err
+	}
+	config.Credentials = credentials
 	svc := ec2.New(session.New(), config)
 
 	// call aws api
 	options := &ec2.DescribeInstancesInput{}
-	for k, v := range filters {
+	for k, v := range o.Filters {
+		options.Filters = append(options.Filters, &ec2.Filter{
+			Name:   aws.String(k),
+			Values: []*string{aws.String(v)},
+		})
+	}
+	for k, v := range o.TagFilters {
 		options.Filters = append(options.Filters, &ec2.Filter{
 			Name:   aws.String("tag:" + k),
 			Values: []*string{aws.String(v)},
@@ -30,15 +66,19 @@ func Describe(filters map[string]string, columns []string) error {
 	if err != nil {
 		return err
 	}
+	if len(resp.Reservations) == 0 {
+		return errors.New("Not Found")
+	}
+
 	for idx, _ := range resp.Reservations {
 		for _, inst := range resp.Reservations[idx].Instances {
-			fmt.Println(formatInstance(inst, columns))
+			fmt.Println(formatInstance(inst, o.FieldNames()))
 		}
 	}
 	return nil
 }
 
-func formatInstance(inst *ec2.Instance, columns []string) string {
+func formatInstance(inst *ec2.Instance, fields []string) string {
 	// fetch IPs
 	var privateIps []string
 	var publicIps []string
@@ -53,13 +93,14 @@ func formatInstance(inst *ec2.Instance, columns []string) string {
 	}
 
 	// fetch tags
+	// NOTE: *DO NOT* support multiple tag values
 	tags := make(map[string]string, 5)
 	for _, tag := range inst.Tags {
 		tags[*tag.Key] = *tag.Value
 	}
 
 	var values []string
-	for _, c := range columns {
+	for _, c := range fields {
 		switch c {
 		case "instance-id":
 			values = append(values, *inst.InstanceId)
