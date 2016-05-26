@@ -60,6 +60,7 @@ func optionsFromFile() *client.Options {
 	opt := &client.Options{}
 	if cfg, err := loadConfig(); err == nil {
 		opt.Region = cfg.Section("options").Key("region").Value()
+		opt.Filters = parseFilterString(cfg.Section("options").Key("filters").Value())
 		opt.TagFilters = parseFilterString(cfg.Section("options").Key("tags").Value())
 		opt.Fields = parseFieldsString(cfg.Section("options").Key("fields").Value())
 		opt.Credentials = cfg.Section("options").Key("creds").Value()
