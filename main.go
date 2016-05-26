@@ -93,7 +93,10 @@ func main() {
 	}
 
 	opt := optionsFromFile()
-	opt.Region = loadRegionInAwsConfig()
+	awsConfigRegion := loadRegionInAwsConfig()
+	if awsConfigRegion != "" {
+		opt.Region = awsConfigRegion
+	}
 	// merge optoins from cmdline
 	if *filters != "" {
 		for k, v := range parseFilterString(*filters) {
