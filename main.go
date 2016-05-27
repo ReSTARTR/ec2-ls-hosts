@@ -8,7 +8,6 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"gopkg.in/ini.v1"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -64,9 +63,7 @@ func optionsFromFile() *client.Options {
 		opt.TagFilters = parseFilterString(cfg.Section("options").Key("tags").Value())
 		opt.Fields = parseFieldsString(cfg.Section("options").Key("fields").Value())
 		opt.Credentials = cfg.Section("options").Key("creds").Value()
-		if parsed, err := strconv.ParseBool(cfg.Section("options").Key("hideHeader").Value()); err == nil {
-			opt.HideHeader = parsed
-		}
+		opt.Noheader = (cfg.Section("options").Key("noheader").Value() == "true")
 	}
 	return opt
 }
@@ -88,7 +85,7 @@ func main() {
 	fields := flag.String("fields", "", "column1,column2,...")
 	regionString := flag.String("region", "", "region name")
 	credsString := flag.String("creds", "", "env, shared, iam")
-	hideHeader := flag.Bool("hideHeader", false, "hide header")
+	noheader := flag.Bool("noheader", false, "hide header")
 	v := flag.Bool("v", false, "show version")
 	flag.Parse()
 	if *v {
@@ -118,7 +115,7 @@ func main() {
 	if *credsString != "" {
 		opt.Credentials = *credsString
 	}
-	opt.HideHeader = opt.HideHeader || *hideHeader
+	opt.Noheader = opt.Noheader || *noheader
 
 	// run
 	w := NewTableWriter()
