@@ -99,6 +99,7 @@ func main() {
 		opt.Region = awsConfigRegion
 	}
 	// merge optoins from cmdline
+	opt.Filters = make(map[string]string)
 	if *filters != "" {
 		for k, v := range parseFilterString(*filters) {
 			opt.Filters[k] = v
