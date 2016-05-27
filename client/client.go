@@ -32,6 +32,7 @@ type Options struct {
 	Fields      []string
 	Region      string
 	Credentials string
+	Noheader    bool
 }
 
 func (o *Options) FieldNames() []string {
@@ -75,7 +76,9 @@ func Describe(o *Options, w Writer) error {
 		return errors.New("Not Found")
 	}
 
-	w.SetHeader(o.FieldNames())
+	if o.Noheader == false {
+		w.SetHeader(o.FieldNames())
+	}
 	for idx, _ := range resp.Reservations {
 		for _, inst := range resp.Reservations[idx].Instances {
 			values := formatInstance(inst, o.FieldNames())

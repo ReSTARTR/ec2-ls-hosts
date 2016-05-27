@@ -63,6 +63,7 @@ func optionsFromFile() *client.Options {
 		opt.TagFilters = parseFilterString(cfg.Section("options").Key("tags").Value())
 		opt.Fields = parseFieldsString(cfg.Section("options").Key("fields").Value())
 		opt.Credentials = cfg.Section("options").Key("creds").Value()
+		opt.Noheader = (cfg.Section("options").Key("noheader").Value() == "true")
 	}
 	return opt
 }
@@ -84,7 +85,7 @@ func main() {
 	fields := flag.String("fields", "", "column1,column2,...")
 	regionString := flag.String("region", "", "region name")
 	credsString := flag.String("creds", "", "env, shared, iam")
-	//hideHeader := flag.Bool("N", false, "hide header")
+	noheader := flag.Bool("noheader", false, "hide header")
 	v := flag.Bool("v", false, "show version")
 	flag.Parse()
 	if *v {
@@ -117,6 +118,7 @@ func main() {
 	if *credsString != "" {
 		opt.Credentials = *credsString
 	}
+	opt.Noheader = opt.Noheader || *noheader
 
 	// run
 	w := NewTableWriter()
