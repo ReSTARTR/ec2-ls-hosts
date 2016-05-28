@@ -35,6 +35,13 @@ type Options struct {
 	Noheader    bool
 }
 
+func NewOptions() *Options {
+	opt := &Options{}
+	opt.Filters = make(map[string]string)
+	opt.TagFilters = make(map[string]string)
+	return opt
+}
+
 func (o *Options) FieldNames() []string {
 	if len(o.Fields) > 1 {
 		return o.Fields
