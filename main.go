@@ -57,7 +57,7 @@ func parseFieldsString(str string) []string {
 }
 
 func optionsFromFile() *client.Options {
-	opt := &client.Options{}
+	opt := client.NewOptions()
 	if cfg, err := loadConfig(); err == nil {
 		opt.Region = cfg.Section("options").Key("region").Value()
 		opt.TagFilters = parseFilterString(cfg.Section("options").Key("tags").Value())
