@@ -22,15 +22,23 @@ CLI Options
 
 `-filters`
 
-tag filter
+ec2 filter  [(Docs)](http://docs.aws.amazon.com/sdk-for-go/api/service/ec2.html#type-DescribeInstancesInput)
 
 ```
 -filters=key1:value1,key2:value2...
 ```
 
-`-columns`
+`-tags`
 
-support columns
+tag filter
+
+```
+-tags=key1:value1,key2:value2...
+```
+
+`-fields`
+
+support fields
 
 - instance-id
 - private-ip
@@ -38,8 +46,24 @@ support columns
 - tag:*
 
 ```
--columns=c1,c2,c3,...
+-fields=c1,c2,c3,...
 ```
+
+`-region`
+
+AWS region
+
+`-creds`
+
+support credentials
+
+- env
+- shared
+- ec2
+
+`-noheader`
+
+Not Display field headers, if set true.
 
 ### with config file
 
@@ -48,11 +72,11 @@ support columns
 
 ```
 [options]
-creds   = shared
-region  = ap-northeast-1
-filters = instance-state-name:running
-tags    = Role:app,Env:production
-fields = instance-id,tag:Name,public-ip,private-ip
+creds    = shared
+region   = ap-northeast-1
+tags     = Role:app,Env:production
+fields   = instance-id,tag:Name,public-ip,private-ip
+noheader = true
 ```
 
 Integration with zsh and peco
