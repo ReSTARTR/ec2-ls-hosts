@@ -2,12 +2,15 @@ package client
 
 import (
 	"errors"
+	"fmt"
+	"regexp"
+	"strings"
+	"text/tabwriter"
+
 	"github.com/ReSTARTR/ec2-ls-hosts/creds"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	"regexp"
-	"strings"
 )
 
 type Writer interface {
@@ -49,7 +52,15 @@ func (o *Options) FieldNames() []string {
 	return defaultFields
 }
 
-func Describe(o *Options, w Writer) error {
+func namesToUpper(strs []string) []string {
+	ss := make([]string, len(strs))
+	for i, s := range strs {
+		ss[i] = strings.ToUpper(s)
+	}
+	return ss
+}
+
+func Describe(o *Options, w *tabwriter.Writer) error {
 	// build queries
 	config := &aws.Config{Region: aws.String(o.Region)}
 	credentials, err := creds.SelectCredentials(o.Credentials)
@@ -84,15 +95,16 @@ func Describe(o *Options, w Writer) error {
 	}
 
 	if o.Noheader == false {
-		w.SetHeader(o.FieldNames())
+		names := namesToUpper(o.FieldNames())
+		fmt.Fprintln(w, strings.Join(names, "\t"))
 	}
 	for idx, _ := range resp.Reservations {
 		for _, inst := range resp.Reservations[idx].Instances {
 			values := formatInstance(inst, o.FieldNames())
-			w.Append(values)
+			fmt.Fprintln(w, strings.Join(values, "\t"))
 		}
 	}
-	w.Render()
+	w.Flush()
 
 	return nil
 }

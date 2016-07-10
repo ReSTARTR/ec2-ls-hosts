@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"github.com/ReSTARTR/ec2-ls-hosts/client"
 	"github.com/ReSTARTR/ec2-ls-hosts/creds"
-	"github.com/olekukonko/tablewriter"
 	"gopkg.in/ini.v1"
 	"os"
 	"strings"
+	"text/tabwriter"
 )
 
 var (
@@ -68,13 +68,9 @@ func optionsFromFile() *client.Options {
 	return opt
 }
 
-func NewTableWriter() client.Writer {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetBorder(false)
-	table.SetHeaderLine(false)
-	//table.SetAutoFormatHeaders(false)
-	table.SetColumnSeparator("")
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
+func NewTableWriter() *tabwriter.Writer {
+	table := new(tabwriter.Writer)
+	table.Init(os.Stdout, 1, 8, 1, '\t', 0)
 	return table
 }
 
