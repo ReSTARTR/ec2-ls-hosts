@@ -3,12 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/ReSTARTR/ec2-ls-hosts/client"
-	"github.com/ReSTARTR/ec2-ls-hosts/creds"
-	"gopkg.in/ini.v1"
 	"os"
 	"strings"
 	"text/tabwriter"
+
+	"github.com/ReSTARTR/ec2-ls-hosts/client"
+	"github.com/ReSTARTR/ec2-ls-hosts/creds"
+	"gopkg.in/ini.v1"
 )
 
 var (
