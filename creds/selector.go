@@ -17,13 +17,13 @@ const (
 )
 
 // creds "env" or "shared" or "ec2"
-func SelectCredentials(creds string) (*credentials.Credentials, error) {
+func SelectCredentials(creds string, profile string) (*credentials.Credentials, error) {
 	sharedCredsFile := os.Getenv("HOME") + SHARED_CREDS_FILENAME
 	switch creds {
 	case "env":
 		return credentials.NewEnvCredentials(), nil
 	case "shared":
-		return credentials.NewSharedCredentials(sharedCredsFile, SHARED_CREDS_PROFILE), nil
+		return credentials.NewSharedCredentials(sharedCredsFile, profile), nil
 	case "ec2":
 		return credentials.NewCredentials(&ec2rolecreds.EC2RoleProvider{
 			Client: ec2metadata.New(session.New()),
@@ -34,7 +34,7 @@ func SelectCredentials(creds string) (*credentials.Credentials, error) {
 			&credentials.EnvProvider{},
 			&credentials.SharedCredentialsProvider{
 				Filename: sharedCredsFile,
-				Profile:  SHARED_CREDS_PROFILE,
+				Profile:  profile,
 			},
 			&ec2rolecreds.EC2RoleProvider{
 				Client: ec2metadata.New(session.New()),

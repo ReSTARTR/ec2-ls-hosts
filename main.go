@@ -15,10 +15,10 @@ var (
 	version string
 )
 
-func loadRegionInAwsConfig() string {
+func loadRegionInAwsConfig(profile string) string {
 	cfg, err := creds.LoadAwsConfig()
 	if err == nil {
-		return cfg.Section("default").Key("region").Value()
+		return cfg.Section(profile).Key("region").Value()
 	}
 	return ""
 }
@@ -59,6 +59,7 @@ func parseFieldsString(str string) []string {
 func optionsFromFile() *client.Options {
 	opt := client.NewOptions()
 	if cfg, err := loadConfig(); err == nil {
+		opt.Profile = cfg.Section("options").Key("profile").Value()
 		opt.Region = cfg.Section("options").Key("region").Value()
 		opt.TagFilters = parseFilterString(cfg.Section("options").Key("tags").Value())
 		opt.Fields = parseFieldsString(cfg.Section("options").Key("fields").Value())
@@ -76,6 +77,7 @@ func NewTableWriter() *tabwriter.Writer {
 
 func main() {
 	// parse options
+	profile := flag.String("profile", "default", "profile name of aws credentials")
 	filters := flag.String("filters", "", "key1:value1,key2:value2,...")
 	tagFilters := flag.String("tags", "", "key1:value1,key2:value2,...")
 	fields := flag.String("fields", "", "column1,column2,...")
@@ -90,7 +92,8 @@ func main() {
 	}
 
 	opt := optionsFromFile()
-	awsConfigRegion := loadRegionInAwsConfig()
+	opt.Profile = *profile
+	awsConfigRegion := loadRegionInAwsConfig(opt.Profile)
 	if awsConfigRegion != "" {
 		opt.Region = awsConfigRegion
 	}

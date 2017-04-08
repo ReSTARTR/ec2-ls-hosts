@@ -30,6 +30,7 @@ var (
 )
 
 type Options struct {
+	Profile     string
 	Filters     map[string]string
 	TagFilters  map[string]string
 	Fields      []string
@@ -63,7 +64,7 @@ func namesToUpper(strs []string) []string {
 func Describe(o *Options, w *tabwriter.Writer) error {
 	// build queries
 	config := &aws.Config{Region: aws.String(o.Region)}
-	credentials, err := creds.SelectCredentials(o.Credentials)
+	credentials, err := creds.SelectCredentials(o.Credentials, o.Profile)
 	if err != nil {
 		return err
 	}

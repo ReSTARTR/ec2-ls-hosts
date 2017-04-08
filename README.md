@@ -73,6 +73,7 @@ Not Display field headers, if set true.
 ```
 [options]
 creds    = shared
+profile  = default
 region   = ap-northeast-1
 tags     = Role:app,Env:production
 fields   = instance-id,tag:Name,public-ip,private-ip
