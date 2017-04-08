@@ -2,12 +2,13 @@ package creds
 
 import (
 	"errors"
+	"os"
+
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"gopkg.in/ini.v1"
-	"os"
 )
 
 const (
